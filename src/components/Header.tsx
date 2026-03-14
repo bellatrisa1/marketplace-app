@@ -1,0 +1,61 @@
+"use client";
+
+import Image from "next/image";
+import { useStore } from "@/store";
+
+export default function Header() {
+  const cartItemsCount = useStore((state) => state.getCartItemsCount());
+  const favoriteIds = useStore((state) => state.favoriteIds);
+
+  return (
+    <header className="header">
+      <div className="container header__inner">
+        <a className="logo" href="#">
+          <Image
+            src="/ORVIX-LOGO.png"
+            alt="Orvix"
+            width={220}
+            height={80}
+            priority
+            className="logo__image"
+          />
+        </a>
+
+        <button className="catalog-btn" type="button">
+          <span className="catalog-btn__burger">
+            <span />
+            <span />
+            <span />
+          </span>
+          <span>Каталог</span>
+        </button>
+
+        <nav className="header__nav">
+          <a href="#">Комнаты</a>
+          <a href="#">Идеи</a>
+          <a href="#">Скидки</a>
+          <a href="#">Услуги</a>
+        </nav>
+
+        <div className="header__actions">
+          <button className="action-btn" type="button">
+            <span className="action-btn__icon">♡</span>
+            <span className="action-btn__text">Избранное</span>
+            <span className="badge">{favoriteIds.length}</span>
+          </button>
+
+          <button className="action-btn" type="button">
+            <span className="action-btn__icon">◯</span>
+            <span className="action-btn__text">Профиль</span>
+          </button>
+
+          <button className="action-btn" type="button">
+            <span className="action-btn__icon">🛒</span>
+            <span className="action-btn__text">Корзина</span>
+            <span className="badge">{cartItemsCount}</span>
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+}
