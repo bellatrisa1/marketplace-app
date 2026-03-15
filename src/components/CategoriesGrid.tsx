@@ -41,9 +41,7 @@ export default function CategoriesGrid({
   }
 
   if (!products.length) {
-    return (
-      <p className="products-state">По вашему запросу ничего не найдено.</p>
-    );
+    return <p className="products-state">По вашему запросу ничего не найдено.</p>;
   }
 
   return (
@@ -94,9 +92,7 @@ export default function CategoriesGrid({
                 ) : null}
               </div>
 
-              <p className="product-card__meta">
-                В корзине API: {product.quantity} шт.
-              </p>
+              <p className="product-card__meta">В корзине API: {product.quantity} шт.</p>
 
               {!cartItem ? (
                 <button
