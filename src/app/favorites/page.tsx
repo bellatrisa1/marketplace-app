@@ -13,7 +13,7 @@ export default function FavoritesPage() {
   const cartItems = useStore((state) => state.cartItems);
   const addToCart = useStore((state) => state.addToCart);
 
-  const products = useStore((state) => state.cartItems); // временно
+  const products = useStore((state) => state.cartItems);
 
   const favorites = products.filter((p) => favoriteIds.includes(p.id));
 
