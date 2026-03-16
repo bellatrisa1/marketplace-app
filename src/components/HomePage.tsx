@@ -9,62 +9,46 @@ import Chips from "./Chips";
 import Hero from "./Hero";
 import CategoriesGrid from "./CategoriesGrid";
 import Footer from "./Footer";
-import type { CartsResponse, MarketplaceProduct } from "@/types/api";
+import type { MarketplaceProduct, ProductsResponse } from "@/types/api";
 
-async function getProductsFromCarts(): Promise<MarketplaceProduct[]> {
-  const response = await fetch("https://dummyjson.com/carts");
+async function getProducts(): Promise<MarketplaceProduct[]> {
+  const response = await fetch("https://dummyjson.com/products?limit=0");
 
   if (!response.ok) {
     throw new Error("Не удалось загрузить товары");
   }
 
-  const data: CartsResponse = await response.json();
+  const data: ProductsResponse = await response.json();
 
-  const map = new Map<number, MarketplaceProduct>();
+  return data.products.map((product) => {
+    const oldPrice = Number(
+      (product.price / (1 - product.discountPercentage / 100)).toFixed(2),
+    );
 
-  data.carts.forEach((cart) => {
-    cart.products.forEach((product) => {
-      const discounted =
-        product.discountedTotal ??
-        product.discountedPrice ??
-        Math.round(product.price * (1 - product.discountPercentage / 100));
-
-      const oldPrice =
-        product.quantity > 0
-          ? Math.round((product.total / product.quantity) * 100) / 100
-          : product.price;
-
-      if (!map.has(product.id)) {
-        map.set(product.id, {
-          id: product.id,
-          title: product.title,
-          price:
-            product.discountedPrice ??
-            Math.round((discounted / Math.max(product.quantity, 1)) * 100) /
-              100,
-          oldPrice,
-          discountPercentage: product.discountPercentage,
-          thumbnail: product.thumbnail,
-          quantity: product.quantity,
-        });
-      }
-    });
+    return {
+      id: product.id,
+      title: product.title,
+      description: product.description,
+      category: product.category,
+      price: product.price,
+      oldPrice,
+      discountPercentage: product.discountPercentage,
+      rating: product.rating,
+      stock: product.stock,
+      brand: product.brand,
+      thumbnail: product.thumbnail,
+      images: product.images ?? [product.thumbnail],
+    };
   });
-
-  return Array.from(map.values());
 }
 
 export default function HomePage() {
   const [search, setSearch] = useState("");
   const [activeChip, setActiveChip] = useState("Все");
 
-  const {
-    data = [],
-    isLoading,
-    isError,
-  } = useQuery({
+  const { data = [], isLoading, isError } = useQuery({
     queryKey: ["marketplace-products"],
-    queryFn: getProductsFromCarts,
+    queryFn: getProducts,
   });
 
   const filteredProducts = useMemo(() => {
@@ -76,25 +60,42 @@ export default function HomePage() {
       result = result.filter((item) => item.discountPercentage > 0);
     }
 
-    if (activeChip === "Дороже") {
-      result = [...result].sort((a, b) => b.price - a.price);
-    }
-
     if (activeChip === "Дешевле") {
       result = [...result].sort((a, b) => a.price - b.price);
     }
 
+    if (activeChip === "Дороже") {
+      result = [...result].sort((a, b) => b.price - a.price);
+    }
+
+    if (
+      activeChip !== "Все" &&
+      activeChip !== "Скидки" &&
+      activeChip !== "Дешевле" &&
+      activeChip !== "Дороже"
+    ) {
+      result = result.filter(
+        (item) => item.category.toLowerCase() === activeChip.toLowerCase(),
+      );
+    }
+
     if (!normalized) return result;
 
-    return result.filter((item) =>
-      item.title.toLowerCase().includes(normalized),
-    );
+    return result.filter((item) => {
+      return (
+        item.title.toLowerCase().includes(normalized) ||
+        item.description.toLowerCase().includes(normalized) ||
+        item.category.toLowerCase().includes(normalized) ||
+        (item.brand?.toLowerCase().includes(normalized) ?? false)
+      );
+    });
   }, [data, search, activeChip]);
 
   return (
     <div className="page">
       <TopBar />
       <Header />
+
       <main className="main">
         <div className="container">
           <SearchBar value={search} onChange={setSearch} />
@@ -107,6 +108,7 @@ export default function HomePage() {
           />
         </div>
       </main>
+
       <Footer />
     </div>
   );

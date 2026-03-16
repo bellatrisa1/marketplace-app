@@ -1,27 +1,19 @@
-export interface CartProduct {
+export interface ProductApiItem {
   id: number;
   title: string;
+  description: string;
+  category: string;
   price: number;
-  quantity: number;
-  total: number;
   discountPercentage: number;
-  discountedTotal?: number;
-  discountedPrice?: number;
+  rating: number;
+  stock: number;
+  brand?: string;
   thumbnail: string;
+  images?: string[];
 }
 
-export interface Cart {
-  id: number;
-  products: CartProduct[];
-  total: number;
-  discountedTotal: number;
-  userId: number;
-  totalProducts: number;
-  totalQuantity: number;
-}
-
-export interface CartsResponse {
-  carts: Cart[];
+export interface ProductsResponse {
+  products: ProductApiItem[];
   total: number;
   skip: number;
   limit: number;
@@ -30,9 +22,14 @@ export interface CartsResponse {
 export interface MarketplaceProduct {
   id: number;
   title: string;
+  description: string;
+  category: string;
   price: number;
   oldPrice?: number;
   discountPercentage: number;
+  rating: number;
+  stock: number;
+  brand?: string;
   thumbnail: string;
-  quantity: number;
+  images: string[];
 }

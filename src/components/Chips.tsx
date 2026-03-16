@@ -1,4 +1,30 @@
-const chips = ["Все", "Скидки", "Дешевле", "Дороже"];
+const chips = [
+  "Все",
+  "Скидки",
+  "beauty",
+  "fragrances",
+  "furniture",
+  "groceries",
+  "home-decoration",
+  "kitchen-accessories",
+  "laptops",
+  "mens-shirts",
+  "mens-shoes",
+  "mobile-accessories",
+  "skin-care",
+  "smartphones",
+  "sports-accessories",
+  "sunglasses",
+  "tablets",
+  "tops",
+  "vehicle",
+  "womens-bags",
+  "womens-dresses",
+  "womens-jewellery",
+  "womens-shoes",
+  "Дешевле",
+  "Дороже",
+];
 
 interface ChipsProps {
   activeChip: string;
