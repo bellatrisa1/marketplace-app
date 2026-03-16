@@ -1,36 +1,164 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ORVIX Marketplace
 
-## Getting Started
+ORVIX is a modern marketplace-style web application inspired by platforms like Ozon and Amazon.
+The project demonstrates a scalable frontend architecture built with **Next.js, TypeScript, Zustand, and React Query**.
 
-First, run the development server:
+The application includes a product catalog, product pages, categories, favorites, and a shopping cart.
+Data is fetched from the **DummyJSON API** and managed using modern state management patterns.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Tech Stack
+
+* **Next.js 16**
+* **React 19**
+* **TypeScript**
+* **Zustand** – global state management
+* **Zustand Persist** – localStorage persistence
+* **React Query** – server state management
+* **SCSS (Sass)** – styling
+* **DummyJSON API** – product data source
+
+---
+
+## Features
+
+### Product Catalog
+
+* Grid layout with product cards
+* Discount display
+* Product availability
+* Responsive design
+
+### Product Page
+
+* Image gallery
+* Product details
+* Price and discount information
+* Add to cart
+* Add to favorites
+* Related products
+
+### Categories
+
+* Category navigation
+* Dynamic category pages
+
+### Shopping Cart
+
+* Add/remove items
+* Increase/decrease quantity
+* Total price calculation
+
+### Favorites
+
+* Save products to favorites
+* Persistent favorites list
+
+### State Persistence
+
+Cart and favorites are stored in **localStorage** using Zustand persist middleware, so the data remains after page reload.
+
+---
+
+## Project Structure
+
+```
+src
+ ├── app
+ │   ├── page.tsx
+ │   ├── layout.tsx
+ │   ├── cart
+ │   ├── favorites
+ │   ├── category
+ │   └── product
+ │
+ ├── components
+ │   ├── Header
+ │   ├── Footer
+ │   ├── CategoriesGrid
+ │   ├── CatalogMenu
+ │   └── ProductPageClient
+ │
+ ├── scss
+ │   ├── _reset.scss
+ │   └── _variables.scss
+ │
+ ├── store.ts
+ └── types
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## API
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Product data is provided by:
 
-## Learn More
+https://dummyjson.com/products
 
-To learn more about Next.js, take a look at the following resources:
+The API is used for:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+* product catalog
+* product pages
+* category filtering
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Installation
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Clone the repository:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+git clone https://github.com/bellatrisa1/marketplace-app.git
+```
+
+Install dependencies:
+
+```
+npm install
+```
+
+Run the development server:
+
+```
+npm run dev
+```
+
+Build the project:
+
+```
+npm run build
+```
+
+Start production build:
+
+```
+npm start
+```
+
+---
+
+## Future Improvements
+
+Planned features include:
+
+* Product filtering (price, rating, brand)
+* Pagination / infinite scroll
+* Improved search system
+* Authentication
+* Checkout flow
+* Order history
+* Performance optimization
+
+---
+
+## Purpose
+
+This project is being developed as a **portfolio project** to demonstrate frontend architecture for a marketplace-style application.
+
+It focuses on:
+
+* clean project structure
+* scalable state management
+* modern React patterns
+* production-ready UI components
