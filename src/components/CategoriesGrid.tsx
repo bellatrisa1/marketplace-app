@@ -95,7 +95,7 @@ export default function CategoriesGrid({
               </div>
 
               <p className="product-card__meta">
-                В корзине API: {product.quantity} шт.
+                В наличии: {product.stock} шт.
               </p>
 
               {!cartItem ? (
