@@ -63,7 +63,7 @@ export default function CategoriesGrid({
                 isFavorite ? "product-card__favorite--active" : ""
               }`}
               type="button"
-              onClick={() => toggleFavorite(product.id)}
+              onClick={() => toggleFavorite(product)}
               aria-label="Добавить в избранное"
             >
               ♥

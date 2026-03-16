@@ -60,7 +60,7 @@ export default function FavoritesPage() {
                     <article className="product-card" key={product.id}>
                       <button
                         className="product-card__favorite product-card__favorite--active"
-                        onClick={() => toggleFavorite(product.id)}
+                        onClick={() => toggleFavorite(product)}
                       >
                         ♥
                       </button>

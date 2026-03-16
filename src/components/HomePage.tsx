@@ -46,7 +46,11 @@ export default function HomePage() {
   const [search, setSearch] = useState("");
   const [activeChip, setActiveChip] = useState("Все");
 
-  const { data = [], isLoading, isError } = useQuery({
+  const {
+    data = [],
+    isLoading,
+    isError,
+  } = useQuery({
     queryKey: ["marketplace-products"],
     queryFn: getProducts,
   });

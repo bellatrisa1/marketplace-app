@@ -1,7 +1,8 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import type { MarketplaceProduct } from "@/types/api";
 
-export interface CartItem extends MarketplaceProduct {
+interface CartItem extends MarketplaceProduct {
   cartQuantity: number;
 }
 
@@ -10,89 +11,86 @@ interface StoreState {
   favoriteIds: number[];
 
   addToCart: (product: MarketplaceProduct) => void;
-  removeFromCart: (productId: number) => void;
-  increaseCartItem: (productId: number) => void;
-  decreaseCartItem: (productId: number) => void;
+  increaseCartItem: (id: number) => void;
+  decreaseCartItem: (id: number) => void;
+  removeFromCart: (id: number) => void;
   clearCart: () => void;
 
-  toggleFavorite: (productId: number) => void;
-  isFavorite: (productId: number) => boolean;
+  toggleFavorite: (product: MarketplaceProduct) => void;
+  isFavorite: (id: number) => boolean;
 
-  getCartItemsCount: () => number;
   getCartTotalPrice: () => number;
+  getCartItemsCount: () => number;
 }
 
-export const useStore = create<StoreState>((set, get) => ({
-  cartItems: [],
-  favoriteIds: [],
+export const useStore = create<StoreState>()(
+  persist(
+    (set, get) => ({
+      cartItems: [],
+      favoriteIds: [],
 
-  addToCart: (product) =>
-    set((state) => {
-      const existingItem = state.cartItems.find(
-        (item) => item.id === product.id,
-      );
+      addToCart: (product) =>
+        set((state) => ({
+          cartItems: [...state.cartItems, { ...product, cartQuantity: 1 }],
+        })),
 
-      if (existingItem) {
-        return {
+      increaseCartItem: (id) =>
+        set((state) => ({
           cartItems: state.cartItems.map((item) =>
-            item.id === product.id
+            item.id === id
               ? { ...item, cartQuantity: item.cartQuantity + 1 }
-              : item,
+              : item
           ),
-        };
-      }
+        })),
 
-      return {
-        cartItems: [...state.cartItems, { ...product, cartQuantity: 1 }],
-      };
+      decreaseCartItem: (id) =>
+        set((state) => ({
+          cartItems: state.cartItems
+            .map((item) =>
+              item.id === id
+                ? { ...item, cartQuantity: item.cartQuantity - 1 }
+                : item
+            )
+            .filter((item) => item.cartQuantity > 0),
+        })),
+
+      removeFromCart: (id) =>
+        set((state) => ({
+          cartItems: state.cartItems.filter((item) => item.id !== id),
+        })),
+
+      clearCart: () => set({ cartItems: [] }),
+
+      toggleFavorite: (product) => {
+        const favorites = get().favoriteIds;
+
+        if (favorites.includes(product.id)) {
+          set({
+            favoriteIds: favorites.filter((id) => id !== product.id),
+          });
+        } else {
+          set({
+            favoriteIds: [...favorites, product.id],
+          });
+        }
+      },
+
+      isFavorite: (id) => get().favoriteIds.includes(id),
+
+      getCartTotalPrice: () =>
+        get().cartItems.reduce(
+          (total, item) => total + item.price * item.cartQuantity,
+          0
+        ),
+
+      getCartItemsCount: () =>
+        get().cartItems.reduce(
+          (total, item) => total + item.cartQuantity,
+          0
+        ),
     }),
-
-  removeFromCart: (productId) =>
-    set((state) => ({
-      cartItems: state.cartItems.filter((item) => item.id !== productId),
-    })),
-
-  increaseCartItem: (productId) =>
-    set((state) => ({
-      cartItems: state.cartItems.map((item) =>
-        item.id === productId
-          ? { ...item, cartQuantity: item.cartQuantity + 1 }
-          : item,
-      ),
-    })),
-
-  decreaseCartItem: (productId) =>
-    set((state) => ({
-      cartItems: state.cartItems
-        .map((item) =>
-          item.id === productId
-            ? { ...item, cartQuantity: item.cartQuantity - 1 }
-            : item,
-        )
-        .filter((item) => item.cartQuantity > 0),
-    })),
-
-  clearCart: () => set({ cartItems: [] }),
-
-  toggleFavorite: (productId) =>
-    set((state) => {
-      const exists = state.favoriteIds.includes(productId);
-
-      return {
-        favoriteIds: exists
-          ? state.favoriteIds.filter((id) => id !== productId)
-          : [...state.favoriteIds, productId],
-      };
-    }),
-
-  isFavorite: (productId) => get().favoriteIds.includes(productId),
-
-  getCartItemsCount: () =>
-    get().cartItems.reduce((total, item) => total + item.cartQuantity, 0),
-
-  getCartTotalPrice: () =>
-    get().cartItems.reduce(
-      (total, item) => total + item.price * item.cartQuantity,
-      0,
-    ),
-}));
+    {
+      name: "orvix-storage",
+    }
+  )
+);
