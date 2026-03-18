@@ -8,6 +8,8 @@ Data is fetched from the **DummyJSON API** and managed using modern state manage
 
 ---
 
+DEMO: https://marketplace-app-taupe-seven.vercel.app/
+
 ## Tech Stack
 
 * **Next.js 16**
